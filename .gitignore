@@ -1,0 +1,13 @@
+# 项目排除路径
+/ch01-hello-springmvc/target/
+/ch02-requesMapping-springmvc/target/
+/ch03-recevieparam-springmvc/target/
+/ch04-return/target/
+/ch05-url-pattern/target/
+/ch06-path-springmvc/target/
+/ch07-ssm/target/
+/ch08-forward-redirect/target/
+/ch09-exception-handler/target/
+/ch10-interceptor/target/
+/ch11-more-interceptors/target/
+/ch12-interceptor-permission/target/

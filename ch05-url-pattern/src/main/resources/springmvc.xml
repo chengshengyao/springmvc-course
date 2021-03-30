@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context
+         https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--声明组件扫描器-->
+    <context:component-scan base-package="com.bjpowernode.controller"/>
+
+    <!--声明视图解析器[内部资源视图分解器]，帮助开发人员设置视图文件的路径-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--属性：名=前缀 值= -->
+        <property name="prefix" value="/WEB-INF/view/subview/"/>
+        <!--属性：名=后缀 值= -->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--加入注解驱动-->
+    <mvc:annotation-driven/>
+
+    <!--第二种处理静态资源的方式
+    加入后，框架创建一个 ResourcesHttpRequestHandler对象，
+    此对象处理静态资源的访问不依赖tomcat服务器
+    mapping 访问静态资源的uri地址 通配符**
+    location 静态资源的位置
+    -->
+<!--    <mvc:resources mapping="/images/**" location="/images/"/>-->
+<!--    <mvc:resources mapping="/html/**" location="/html/"/>-->
+<!--    <mvc:resources mapping="/js/**" location="/js/"/>-->
+    <mvc:resources mapping="/static/**" location="/static/"/>
+</beans>

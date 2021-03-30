@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjpowernode.dao.UserDao">
+    <select id="findAll" resultType="user">
+        select *
+        from sm_user
+    </select>
+
+    <select id="findUserById" resultType="user">
+        select *
+        from sm_user
+        where ID = #{ID}
+    </select>
+
+    <update id="updateUser">
+        update sm_user
+        set NAME=#{NAME},
+            PASSWORD=#{PASSWORD}
+        where ID = #{ID}
+    </update>
+
+    <delete id="userDelete">
+        delete
+        from sm_user
+        where ID = #{ID}
+    </delete>
+
+    <insert id="add">
+        insert into sm_user (ID, NAME, PASSWORD)
+        values (null, #{NAME}, #{PASSWORD})
+    </insert>
+
+</mapper>

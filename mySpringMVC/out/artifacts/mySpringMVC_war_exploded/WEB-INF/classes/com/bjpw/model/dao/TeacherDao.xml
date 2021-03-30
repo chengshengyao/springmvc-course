@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjpw.model.dao.TeacherDao">
+  <resultMap id="BaseResultMap" type="com.bjpw.entity.Teacher">
+    <id column="tea_id" jdbcType="INTEGER" property="teaId" />
+    <result column="tea_name" jdbcType="VARCHAR" property="teaName" />
+    <result column="tea_age" jdbcType="INTEGER" property="teaAge" />
+    <result column="tea_sex" jdbcType="VARCHAR" property="teaSex" />
+    <result column="tea_date" jdbcType="VARCHAR" property="teaDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    tea_id, tea_name, tea_age, tea_sex, tea_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_teacher
+    where tea_id = #{teaId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_teacher
+  </select>
+
+  <select id="selectByPage"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_teacher
+    limit #{skipNo},#{pageNo}
+  </select>
+
+
+
+  <sql id="Base_Search_Condition">
+    <if test="teacher.teaName != null and teacher.teaName != '' ">
+      and tea_name like concat('%',#{teacher.teaName},'%')
+    </if>
+    <if test="teacher.teaSex != null and teacher.teaSex != ''">
+      and tea_sex = #{teacher.teaSex}
+    </if>
+
+    <if test="teacher.teaAgeBegin != null ">
+      and tea_age &gt; #{teacher.teaAgeBegin}
+    </if>
+    <if test="teacher.teaAgeEnd != null ">
+      and tea_age &lt; #{teacher.teaAgeEnd}
+    </if>
+
+    <if test="teacher.teaDateBegin != null and teacher.teaDateBegin != ''">
+      <!--string类型的日期转换为date类型的日期-->
+      and tea_date &gt; STR_TO_DATE(#{teacher.teaDateBegin},'%Y-%m-%d')
+    </if>
+    <if test="teacher.teaDateEnd != null and teacher.teaDateEnd != ''">
+      and tea_date &lt; STR_TO_DATE(#{teacher.teaDateEnd},'%Y-%m-%d')
+    </if>
+  </sql>
+
+
+  <select id="searchByPage"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_teacher
+    where 1=1
+    <include refid="Base_Search_Condition" />
+    limit #{pageBean.skipNo},#{pageBean.pageNo}
+  </select>
+
+  <select id="searchTotalCount" resultType="int">
+    select
+    count(1)
+    from t_teacher
+    where 1=1
+    <include refid="Base_Search_Condition" />
+  </select>
+
+  <select id="selectTotalCount" resultType="int">
+    select
+    count(1)
+    from t_teacher
+  </select>
+
+  <select id="selectByTeacher"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_teacher
+    where 1=1
+     <if test="teaName != null and teaName != '' ">
+       and tea_name like concat('%',#{teaName},'%')
+     </if>
+     <if test="teaSex != null and teaSex != ''">
+       and tea_sex = #{teaSex}
+     </if>
+    <!--<if test="teaAge != null ">
+      and tea_age = #{teaAge}
+    </if>-->
+    <if test="teaAgeBegin != null ">
+      and tea_age &gt; #{teaAgeBegin}
+    </if>
+    <if test="teaAgeEnd != null ">
+      and tea_age &lt; #{teaAgeEnd}
+    </if>
+
+    <if test="teaDateBegin != null and teaDateBegin != ''">
+    <!--string类型的日期转换为date类型的日期-->
+      and tea_date &gt; STR_TO_DATE(#{teaDateBegin},'%Y-%m-%d')
+    </if>
+    <if test="teaDateEnd != null and teaDateEnd != ''">
+      and tea_date &lt; STR_TO_DATE(#{teaDateEnd},'%Y-%m-%d')
+    </if>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_teacher
+    where tea_id = #{teaId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteBeath" >
+    delete from t_teacher
+    where tea_id in
+    <!--mybatis参数类型为数组时，集合的名称就是array，参数类型为List时，集合名称就是list-->
+    <foreach collection="array" item="teaId" open="(" close=")" separator=",">
+        #{teaId}
+    </foreach>
+  </delete>
+
+  <insert id="insert" keyColumn="tea_id" keyProperty="teaId" parameterType="com.bjpw.entity.Teacher" useGeneratedKeys="true">
+    insert into t_teacher (tea_name, tea_age, tea_sex, tea_date
+      )
+    values (#{teaName,jdbcType=VARCHAR}, #{teaAge,jdbcType=INTEGER}, #{teaSex,jdbcType=VARCHAR}, #{teaDate,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="tea_id" keyProperty="teaId" parameterType="com.bjpw.entity.Teacher" useGeneratedKeys="true">
+    insert into t_teacher
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="teaName != null">
+        tea_name,
+      </if>
+      <if test="teaAge != null">
+        tea_age,
+      </if>
+      <if test="teaSex != null">
+        tea_sex,
+      </if>
+      <if test="teaDate != null">
+        tea_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="teaName != null">
+        #{teaName,jdbcType=VARCHAR},
+      </if>
+      <if test="teaAge != null">
+        #{teaAge,jdbcType=INTEGER},
+      </if>
+      <if test="teaSex != null">
+        #{teaSex,jdbcType=VARCHAR},
+      </if>
+      <if test="teaDate != null">
+        #{teaDate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bjpw.entity.Teacher">
+    update t_teacher
+    <set>
+      <if test="teaName != null">
+        tea_name = #{teaName,jdbcType=VARCHAR},
+      </if>
+      <if test="teaAge != null">
+        tea_age = #{teaAge,jdbcType=INTEGER},
+      </if>
+      <if test="teaSex != null">
+        tea_sex = #{teaSex,jdbcType=VARCHAR},
+      </if>
+      <if test="teaDate != null">
+        tea_date = #{tea_date,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tea_id = #{teaId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bjpw.entity.Teacher">
+    update t_teacher
+    set tea_name = #{teaName,jdbcType=VARCHAR},
+      tea_age = #{teaAge,jdbcType=INTEGER},
+      tea_sex = #{teaSex,jdbcType=VARCHAR}
+    where tea_id = #{teaId,jdbcType=INTEGER}
+  </update>
+</mapper>
